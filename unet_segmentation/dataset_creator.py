@@ -48,9 +48,16 @@ class MedicalImageDataset(Dataset):
     def __getitem__(self, index):
         img_path = os.path.join(self.image_dir, self.images[index])
         mask_path = os.path.join(self.mask_dir, self.images[index])
+
+        # original image
         image = read_image(img_path, mode=ImageReadMode.RGB)
+        image = image.float() / 255.0
+
+        # mask image
         mask = read_image(mask_path, mode=ImageReadMode.RGB)
         mask = v2_transforms.Grayscale()(mask)
+
+        # set black or white
         mask[mask < 100] = 0.0
         mask[mask >= 100] = 1.0
 
@@ -76,7 +83,7 @@ class MedicalImageDataset(Dataset):
 
         # we need to use sigmoid on last activation
 
-        return image.float(), multi_channel_mask.float()
+        return image, multi_channel_mask
 
 
 # split_data splits data into train and test directory
@@ -126,11 +133,13 @@ def split_data(dataset_dir, orig, msk_dir):  # pragma: no cover
         for i, img in enumerate(images):
             img_path = os.path.join(label_dir, img)
             mask_path = os.path.join(label_mask_dir, img)
-            if i < len(images) * 0.8:
+            if i < len(images) * 0.2:
                 os.system(f"cp {img_path} {train_original_label_dir}")
                 os.system(f"cp {mask_path} {train_mask_label_dir}")
-            else:
+            elif i < len(images) * 0.25:
                 os.system(f"cp {img_path} {test_original_label_dir}")
                 os.system(f"cp {mask_path} {test_mask_label_dir}")
+            else:
+                break
     print("Data split successfully!")
     return train_dir, test_dir

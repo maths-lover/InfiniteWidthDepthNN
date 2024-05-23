@@ -6,7 +6,7 @@ from dataset_creator import MedicalImageDataset, get_label, split_data
 from torch.utils.data import ConcatDataset, DataLoader
 
 
-def save_checkpoint(state, filename="my_checkpoint.pth.tar"):  # pragma: no cover
+def save_checkpoint(state, filename="my_checkpoint.pth.zip"):  # pragma: no cover
     print("=> Saving Checkpoint")
     torch.save(state, filename)
 
@@ -34,8 +34,10 @@ def extract_mask_label_from_batch(multi_channel_mask_batch):
     labels = []
     for mask_idx in range(multi_channel_mask_batch.size(0)):
         mask, label = extract_mask_label(multi_channel_mask_batch[mask_idx])
-        masks.append(mask.detach().cpu())
-        labels.append(label.detach().cpu())
+        masks.append(mask)
+        labels.append(label)
+        # masks.append(mask.detach().cpu())
+        # labels.append(label.detach().cpu())
 
     return masks, labels
 
@@ -134,7 +136,7 @@ def save_predictions_as_images(
         x = x.to(device=device)
         with torch.no_grad():
             preds = torch.sigmoid(model(x))
-            preds = preds > 0.5
+            preds = (preds > 0.5).float()
 
         pred_images, labels = extract_mask_label_from_batch(preds)
         original_imgs, original_labels = extract_mask_label_from_batch(y)
