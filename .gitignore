@@ -1,6 +1,6 @@
 # my custom additions
 dataset
-dataset.7z
+dataset.*
 predictions/
 changes_to_make.md
 my_checkpoint.pth.tar
