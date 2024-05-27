@@ -5,6 +5,10 @@ predictions/
 changes_to_make.md
 my_checkpoint.pth.tar
 my_checkpoint.pth.zip
+working_checkpoint.pth.zip
+data/
+data/*
+resnet_unet.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

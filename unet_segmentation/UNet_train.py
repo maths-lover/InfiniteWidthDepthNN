@@ -1,15 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torchvision
 import torchvision.transforms.functional as TF
 import torchvision.transforms.v2 as v2_transforms
 from torchsummary import summary
 from tqdm import tqdm
-from UNet_model import UNet
-from utils import (
+
+from unet_segmentation.UNet_model import UNet
+from unet_segmentation.utils import (
     check_accuracy,
-    extract_mask_label_from_batch,
     get_loaders,
     load_checkpoint,
     save_checkpoint,

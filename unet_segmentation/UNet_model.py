@@ -5,7 +5,8 @@ import torch.nn as nn
 
 # import torch.nn.functional as F
 import torchvision.transforms.functional as TF
-from logger import Logger
+
+from unet_segmentation.logger import Logger
 
 log = Logger(log_level=logging.DEBUG)
 

@@ -64,7 +64,7 @@ class MedicalImageDataset(Dataset):
         if self.transform is not None:
             image, mask = self.transform(image, mask)
 
-        label = get_label_id(os.path.basename(os.path.dirname(img_path)))
+        label_id = get_label_id(os.path.basename(os.path.dirname(img_path)))
 
         # remove dimension
         mask = torch.squeeze(mask)
@@ -76,10 +76,10 @@ class MedicalImageDataset(Dataset):
         multi_channel_mask[0][mask == 1.0] = 1.0
 
         # have a copy of the mask in label's channel
-        multi_channel_mask[1][mask > 0] = 1.0 if label == 0 else 0.0
-        multi_channel_mask[2][mask > 0] = 1.0 if label == 1 else 0.0
-        multi_channel_mask[3][mask > 0] = 1.0 if label == 2 else 0.0
-        multi_channel_mask[4][mask > 0] = 1.0 if label == 3 else 0.0
+        multi_channel_mask[1][mask > 0] = 1.0 if label_id == 0 else 0.0
+        multi_channel_mask[2][mask > 0] = 1.0 if label_id == 1 else 0.0
+        multi_channel_mask[3][mask > 0] = 1.0 if label_id == 2 else 0.0
+        multi_channel_mask[4][mask > 0] = 1.0 if label_id == 3 else 0.0
 
         # we need to use sigmoid on last activation
 

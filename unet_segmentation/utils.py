@@ -2,8 +2,9 @@ import os
 
 import torch
 import torchvision
-from dataset_creator import MedicalImageDataset, get_label, split_data
 from torch.utils.data import ConcatDataset, DataLoader
+
+from unet_segmentation.dataset_creator import MedicalImageDataset, get_label, split_data
 
 
 def save_checkpoint(state, filename="my_checkpoint.pth.zip"):  # pragma: no cover
@@ -117,7 +118,7 @@ def check_accuracy(loader, model, device="cuda"):  # pragma: no cover
             x = x.to(device)
             y = y.to(device)
             preds = torch.sigmoid(model(x))
-            preds = (preds > 0.5).float()
+            preds = (preds > 0.85).float()
             num_correct += (preds == y).sum()
             num_pixels += torch.numel(preds)
             dice_score += (2 * (preds * y).sum()) / ((preds + y).sum() + 1e-8)
@@ -136,7 +137,7 @@ def save_predictions_as_images(
         x = x.to(device=device)
         with torch.no_grad():
             preds = torch.sigmoid(model(x))
-            preds = (preds > 0.5).float()
+            preds = (preds > 0.85).float()
 
         pred_images, labels = extract_mask_label_from_batch(preds)
         original_imgs, original_labels = extract_mask_label_from_batch(y)
